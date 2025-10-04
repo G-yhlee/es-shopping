@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmmettCart - Modern Shopping Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f1f5f9;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 20px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            --line-height-tight: 1.25;
+            --line-height-normal: 1.5;
+            --line-height-relaxed: 1.75;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-weight: 400;
+            font-size: var(--font-size-base, 1rem);
+            line-height: var(--line-height-normal, 1.5);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.75rem;
+        }
+
+        .nav-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-item i {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-title i {
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+            background: var(--bg-primary);
+        }
+
+        .product-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1.125rem;
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-size: 1.375rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .cart-content {
+            max-height: 500px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-secondary);
+        }
+
+        .cart-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cart-content::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 3px;
+        }
+
+        .cart-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .cart-item:hover {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .cart-item-price {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-primary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .quantity-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .quantity-display {
+            min-width: 2rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .cart-total {
+            border-top: 2px solid var(--primary);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .total-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none !important;
+        }
+
+        .create-cart-btn {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .create-cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-cart h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-cart p {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status.opened {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .status.confirmed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status.cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+            display: none;
+            position: relative;
+            border-left: 4px solid;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: currentColor;
+            opacity: 0.3;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-left-color: var(--success);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border-left-color: var(--error);
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border-left-color: var(--warning);
+        }
+
+        .history-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-stats {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+
+            .cart-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Pulse Animation for new items */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+                gap: 1.5rem;
+            }
+
+            .nav {
+                padding: 1rem;
+            }
+
+            .nav-brand h1 {
+                font-size: 1.25rem;
+            }
+
+            .nav-stats {
+                gap: 1rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .item-details {
+                width: 100%;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .cart-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+
+            .nav {
+                padding: 0.75rem;
+            }
+
+            .section {
+                padding: 1rem;
+            }
+
+            .nav-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .stat {
+                min-width: auto;
+            }
+        }
+
+        /* Enhanced Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        .animate-slide-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success/Error States */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        /* Hover Effects Enhancement */
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item:hover {
+            background: rgba(99, 102, 241, 0.02);
+            border-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .history-item:hover {
+            background: rgba(99, 102, 241, 0.02);
+            border-color: rgba(99, 102, 241, 0.1);
+            cursor: pointer;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Alert -->
+    <div id="alert" class="alert"></div>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-shopping-cart"></i>
+                EmmettCart
+            </div>
+            <div class="nav-stats">
+                <div class="stat-item">
+                    <i class="fas fa-database"></i>
+                    <span>Event Sourced</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-file-code"></i>
+                    <span>JSON Stored</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-rocket"></i>
+                    <span>Production Ready</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Modern Shopping Experience</h1>
+            <p class="page-subtitle">Event-sourced cart system with persistent JSON storage</p>
+        </div>
+
+        <!-- Alert Messages -->
+        <div class="alert" id="alert"></div>
+
+        <!-- Main Content -->
+        <div class="main-layout">
+            <!-- Products Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-store"></i>
+                        상품 카탈로그
+                    </div>
+                    <button class="create-cart-btn" onclick="createCart()">
+                        <i class="fas fa-plus"></i>
+                        새 장바구니 만들기
+                    </button>
+                </div>
+                <div class="product-grid" id="products">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Shopping Cart Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-shopping-bag"></i>
+                        현재 장바구니
+                        <span class="status opened" id="cartStatus">새 카트</span>
+                    </div>
+                </div>
+                <div class="cart-content">
+                    <div id="cartContent">
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h3>장바구니가 비어있습니다</h3>
+                            <p>상품을 클릭하여 장바구니에 추가해보세요</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart History Section -->
+        <div class="history-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-history"></i>
+                    장바구니 히스토리
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span id="historyCount">0개 장바구니</span>
+                </div>
+            </div>
+            <div id="cartHistory">
+                <div class="empty-cart">
+                    <i class="fas fa-archive"></i>
+                    <h3>저장된 장바구니가 없습니다</h3>
+                    <p>장바구니를 생성하면 자동으로 히스토리에 저장됩니다</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCart = null;
+        let products = [];
+        let cartHistory = [];
+
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch('/api');
+                const data = await response.json();
+                products = data.sampleProducts.map((p, index) => ({
+                    ...p,
+                    productName: getProductName(index)
+                }));
+                renderProducts();
+            } catch (error) {
+                showAlert('상품을 불러오는데 실패했습니다', 'error');
+            }
+        }
+
+        function getProductName(index) {
+            const names = ['노트북', '마우스', '키보드', '모니터', '헤드셋'];
+            return names[index] || `상품 ${index + 1}`;
+        }
+
+        function getProductIcon(index) {
+            const icons = ['fas fa-laptop', 'fas fa-computer-mouse', 'fas fa-keyboard', 'fas fa-desktop', 'fas fa-headphones'];
+            return icons[index] || 'fas fa-shopping-bag';
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('products');
+            container.innerHTML = products.map((product, index) => `
+                <div class="product-card" onclick="addToCart('${product.productId}', '${product.productName}', ${product.price})">
+                    <i class="product-icon ${getProductIcon(index)}"></i>
+                    <div class="product-name">${product.productName}</div>
+                    <div class="product-price">
+                        <i class="fas fa-dollar-sign"></i>
+                        ${product.price}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Create cart
+        async function createCart() {
+            try {
+                const response = await fetch('/api/carts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) throw new Error('Failed to create cart');
+
+                const data = await response.json();
+                currentCart = {
+                    id: data.id,
+                    status: data.status,
+                    items: [],
+                    revision: data.revision
+                };
+
+                showAlert('새 장바구니가 생성되었습니다', 'success');
+                addToCartHistory(currentCart);
+                renderCart();
+            } catch (error) {
+                showAlert('장바구니 생성에 실패했습니다', 'error');
+            }
+        }
+
+        // Add to cart
+        async function addToCart(productId, productName, price) {
+            if (!currentCart || currentCart.status !== 'Opened') {
+                showAlert('먼저 새 장바구니를 만들어주세요', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/carts/${currentCart.id}/items`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'If-Match': currentCart.revision
+                    },
+                    body: JSON.stringify({
+                        productId,
+                        productName,
+                        quantity: 1
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to add item');
+
+                const data = await response.json();
+
+                // Reload cart from server to get accurate state
+                await loadCartFromServer(currentCart.id);
+
+                // Update cart history
+                updateCartHistory(currentCart);
+
+                showAlert(`${productName}이(가) 추가되었습니다`, 'success');
+                renderCart();
+            } catch (error) {
+                showAlert('상품 추가에 실패했습니다', 'error');
+            }
+        }
+
+        // Remove from cart
+        async function removeFromCart(productId) {
+            if (!currentCart || currentCart.status !== 'Opened') return;
+
+            try {
+                const response = await fetch(`/api/carts/${currentCart.id}/items/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'If-Match': currentCart.revision
+                    },
+                    body: JSON.stringify({ quantity: 1 })
+                });
+
+                if (!response.ok) throw new Error('Failed to remove item');
+
+                const data = await response.json();
+
+                // Reload cart from server to get accurate state
+                await loadCartFromServer(currentCart.id);
+
+                // Update cart history
+                updateCartHistory(currentCart);
+
+                renderCart();
+            } catch (error) {
+                showAlert('상품 제거에 실패했습니다', 'error');
+            }
+        }
+
+        // Confirm cart
+        async function confirmCart() {
+            if (!currentCart || currentCart.status !== 'Opened') return;
+
+            try {
+                const response = await fetch(`/api/carts/${currentCart.id}/confirm`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'If-Match': currentCart.revision
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to confirm cart');
+
+                const data = await response.json();
+                currentCart.status = 'Confirmed';
+                currentCart.revision = data.revision;
+
+                showAlert('장바구니가 확정되었습니다', 'success');
+                updateCartHistory(currentCart);
+                renderCart();
+            } catch (error) {
+                showAlert('장바구니 확정에 실패했습니다', 'error');
+            }
+        }
+
+        // Cancel cart
+        async function cancelCart() {
+            if (!currentCart || currentCart.status !== 'Opened') return;
+
+            try {
+                const response = await fetch(`/api/carts/${currentCart.id}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'If-Match': currentCart.revision
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to cancel cart');
+
+                const data = await response.json();
+                currentCart.status = 'Cancelled';
+                currentCart.revision = data.revision;
+
+                showAlert('장바구니가 취소되었습니다', 'success');
+                updateCartHistory(currentCart);
+                renderCart();
+            } catch (error) {
+                showAlert('장바구니 취소에 실패했습니다', 'error');
+            }
+        }
+
+        // Render cart
+        function renderCart() {
+            const container = document.getElementById('cartContent');
+            const statusEl = document.getElementById('cartStatus');
+
+            if (!currentCart) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>장바구니가 비어있습니다</h3>
+                        <p>상품을 클릭하여 장바구니에 추가해보세요</p>
+                    </div>
+                `;
+                statusEl.innerHTML = '<i class="fas fa-plus-circle"></i> 새 카트';
+                statusEl.className = 'status opened';
+                return;
+            }
+
+            const statusText = currentCart.status === 'Opened' ? '진행중' :
+                              currentCart.status === 'Confirmed' ? '확정됨' : '취소됨';
+            const statusIcon = currentCart.status === 'Opened' ? 'fas fa-clock' :
+                              currentCart.status === 'Confirmed' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+            statusEl.innerHTML = `<i class="${statusIcon}"></i> ${statusText}`;
+            statusEl.className = `status ${currentCart.status.toLowerCase()}`;
+
+            if (currentCart.items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>장바구니가 비어있습니다</h3>
+                        <p>왼쪽 상품을 클릭하여 추가하세요</p>
+                    </div>
+                `;
+            } else {
+                const total = currentCart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const itemCount = currentCart.items.reduce((sum, item) => sum + item.quantity, 0);
+
+                container.innerHTML = `
+                    <div class="cart-items">
+                        ${currentCart.items.map(item => `
+                            <div class="cart-item">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">
+                                        <i class="fas fa-box"></i>
+                                        ${item.productName}
+                                    </div>
+                                    <div class="cart-item-price">$${item.price} × ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</div>
+                                </div>
+                                <div class="quantity-control">
+                                    <button class="quantity-btn" onclick="removeFromCart('${item.productId}')"
+                                            ${currentCart.status !== 'Opened' ? 'disabled' : ''}>
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span class="quantity-display">${item.quantity}</span>
+                                    <button class="quantity-btn" onclick="addToCart('${item.productId}', '${item.productName}', ${item.price})"
+                                            ${currentCart.status !== 'Opened' ? 'disabled' : ''}>
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="cart-total">
+                        <div class="total-label">
+                            <i class="fas fa-calculator"></i>
+                            총 ${itemCount}개 상품
+                        </div>
+                        <div class="total-amount">$${total.toFixed(2)}</div>
+                    </div>
+                    ${currentCart.status === 'Opened' ? `
+                        <div class="cart-actions">
+                            <button class="btn btn-success" onclick="confirmCart()">
+                                <i class="fas fa-check"></i>
+                                주문 확정
+                            </button>
+                            <button class="btn btn-danger" onclick="cancelCart()">
+                                <i class="fas fa-times"></i>
+                                주문 취소
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert ${type}`;
+            alert.style.display = 'block';
+
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load cart history from server
+        async function loadCartHistory() {
+            try {
+                const response = await fetch('/api/carts');
+                if (response.ok) {
+                    cartHistory = await response.json();
+                    renderCartHistory();
+                }
+            } catch (error) {
+                console.warn('Failed to load cart history from server:', error);
+                cartHistory = [];
+            }
+        }
+
+        // Add cart to history (no action needed - server handles this)
+        function addToCartHistory(cart) {
+            // No action needed - cart is already stored in JSON files on server
+            // Just reload history from server
+            loadCartHistory();
+        }
+
+        // Update cart in history (no action needed - server handles this)
+        function updateCartHistory(cart) {
+            // No action needed - cart is already updated in JSON files on server
+            // Just reload history from server
+            loadCartHistory();
+        }
+
+        // Load cart from server (for internal use)
+        async function loadCartFromServer(cartId) {
+            const response = await fetch(`/api/carts/${cartId}`);
+            if (!response.ok) throw new Error('Failed to load cart');
+
+            const data = await response.json();
+            currentCart = {
+                id: data.id,
+                status: data.status,
+                items: data.items ? data.items.map(item => ({
+                    productId: item.productId,
+                    productName: item.productName,
+                    price: item.unitPrice,
+                    quantity: item.quantity
+                })) : [],
+                revision: data.revision
+            };
+        }
+
+        // Load specific cart
+        async function loadCart(cartId) {
+            try {
+                await loadCartFromServer(cartId);
+                renderCart();
+                showAlert('장바구니를 불러왔습니다', 'success');
+            } catch (error) {
+                showAlert('장바구니를 불러오는데 실패했습니다', 'error');
+            }
+        }
+
+        // Render cart history
+        function renderCartHistory() {
+            const container = document.getElementById('cartHistory');
+            const historyCountEl = document.getElementById('historyCount');
+
+            // Update history count
+            historyCountEl.textContent = `${cartHistory.length}개 장바구니`;
+
+            if (cartHistory.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-archive"></i>
+                        <h3>저장된 장바구니가 없습니다</h3>
+                        <p>장바구니를 생성하면 자동으로 히스토리에 저장됩니다</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="display: grid; gap: 0.75rem;">
+                    ${cartHistory.map(cart => {
+                        const total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                        const itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+                        const date = new Date(cart.openedAt || cart.lastUpdated).toLocaleString('ko-KR');
+
+                        const statusText = cart.status === 'Opened' ? '진행중' :
+                                          cart.status === 'Confirmed' ? '확정됨' : '취소됨';
+                        const statusIcon = cart.status === 'Opened' ? 'fas fa-clock' :
+                                          cart.status === 'Confirmed' ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+                        return `
+                            <div class="history-item" onclick="loadCart('${cart.id}')">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        장바구니 #${cart.id.slice(0, 8)}
+                                        <span class="status ${cart.status.toLowerCase()}">
+                                            <i class="${statusIcon}"></i>
+                                            ${statusText}
+                                        </span>
+                                    </div>
+                                    <div class="cart-item-price">
+                                        <i class="fas fa-box"></i>
+                                        ${itemCount}개 상품 •
+                                        <i class="fas fa-dollar-sign"></i>
+                                        ${total.toFixed(2)} •
+                                        <i class="fas fa-calendar"></i>
+                                        ${date}
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="event.stopPropagation(); loadCart('${cart.id}')">
+                                        <i class="fas fa-download"></i>
+                                        불러오기
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).reverse().join('')}
+                </div>
+            `;
+        }
+
+        // Initialize app
+        async function init() {
+            await loadProducts();
+            loadCartHistory();
+            if (currentCartId) {
+                loadCart();
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
