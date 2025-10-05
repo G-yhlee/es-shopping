@@ -97,7 +97,7 @@ export function getJsonFileEventStore(options: JsonFileEventStoreOptions = {}): 
                       productId: event.data.productItem.productId,
                       productName: event.data.productItem.productName,
                       quantity: event.data.productItem.quantity,
-                      price: event.data.productItem.unitPrice
+                      unitPrice: event.data.productItem.unitPrice
                     });
                   }
                   break;

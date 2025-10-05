@@ -25,6 +25,32 @@ app.use(express.static('public'));
 
 app.use('/api', shoppingCartApi(eventStore, getProductPrice));
 
+// Add events endpoint
+app.get('/api/events', async (req, res) => {
+  try {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+
+    const dataDir = path.join(process.cwd(), 'data', 'events');
+    const files = await fs.readdir(dataDir);
+    const eventStreams = [];
+
+    for (const file of files) {
+      if (file.endsWith('.json')) {
+        const filePath = path.join(dataDir, file);
+        const content = await fs.readFile(filePath, 'utf-8');
+        const streamData = JSON.parse(content);
+        eventStreams.push(streamData);
+      }
+    }
+
+    res.json(eventStreams);
+  } catch (error) {
+    console.error('Error loading events:', error);
+    res.json([]);
+  }
+});
+
 app.get('/api', (req, res) => {
   res.json({
     message: 'Shopping Cart Event Sourcing API',
@@ -35,6 +61,8 @@ app.get('/api', (req, res) => {
       'POST /carts/:id/confirm': 'Confirm cart',
       'POST /carts/:id/cancel': 'Cancel cart',
       'GET /carts/:id': 'Get cart details',
+      'GET /carts': 'Get all carts',
+      'GET /events': 'Get all events',
     },
     sampleProducts: Array.from(productCatalog.entries()).map(([id, price]) => ({
       productId: id,

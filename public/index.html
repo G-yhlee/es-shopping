@@ -155,6 +155,114 @@
             margin-bottom: 2rem;
         }
 
+        .four-panel-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2rem;
+            min-height: 600px;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .event-log {
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+        }
+
+        .event-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .event-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .event-type {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .event-data {
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .event-timestamp {
+            position: absolute;
+            top: 0.75rem;
+            right: 1rem;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        .history-item.selected {
+            border: 2px solid var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .event-item.highlighted {
+            border-left: 4px solid var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
         .card {
             background: var(--bg-primary);
             border-radius: var(--radius-xl);
@@ -918,63 +1026,163 @@
         <!-- Alert Messages -->
         <div class="alert" id="alert"></div>
 
-        <!-- Main Content -->
-        <div class="main-layout">
-            <!-- Products Section -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-store"></i>
-                        상품 카탈로그
-                    </div>
-                    <button class="create-cart-btn" onclick="createCart()">
-                        <i class="fas fa-plus"></i>
-                        새 장바구니 만들기
-                    </button>
-                </div>
-                <div class="product-grid" id="products">
-                    <!-- Products will be loaded here -->
-                </div>
-            </div>
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" onclick="switchTab('grid')">
+                <i class="fas fa-th"></i>
+                4패널 뷰
+            </button>
+            <button class="tab-button" onclick="switchTab('classic')">
+                <i class="fas fa-list"></i>
+                클래식 뷰
+            </button>
+        </div>
 
-            <!-- Shopping Cart Section -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-shopping-bag"></i>
-                        현재 장바구니
-                        <span class="status opened" id="cartStatus">새 카트</span>
+        <!-- Tab Content: 4-Panel Grid View -->
+        <div id="gridView" class="tab-content active">
+            <div class="four-panel-layout">
+                <!-- Products Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-store"></i>
+                            상품 리스트
+                        </div>
+                        <button class="create-cart-btn" onclick="createCart()">
+                            <i class="fas fa-plus"></i>
+                            새 장바구니 만들기
+                        </button>
+                    </div>
+                    <div class="product-grid" id="products">
+                        <!-- Products will be loaded here -->
                     </div>
                 </div>
-                <div class="cart-content">
-                    <div id="cartContent">
+
+                <!-- Shopping Cart Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-shopping-bag"></i>
+                            장바구니 리스트
+                            <span class="status opened" id="cartStatus">새 카트</span>
+                        </div>
+                    </div>
+                    <div class="cart-content">
+                        <div id="cartContent">
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h3>장바구니가 비어있습니다</h3>
+                                <p>상품을 클릭하여 장바구니에 추가해보세요</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart History Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-history"></i>
+                            장바구니 히스토리
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span id="historyCount">0개 장바구니</span>
+                        </div>
+                    </div>
+                    <div class="cart-content">
+                        <div id="cartHistory">
+                            <div class="empty-cart">
+                                <i class="fas fa-archive"></i>
+                                <h3>저장된 장바구니가 없습니다</h3>
+                                <p>장바구니를 생성하면 자동으로 히스토리에 저장됩니다</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event History Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-code"></i>
+                            이벤트 히스토리
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-bolt"></i>
+                            <span id="eventCount">0개 이벤트</span>
+                        </div>
+                    </div>
+                    <div class="event-log" id="eventHistory">
                         <div class="empty-cart">
-                            <i class="fas fa-shopping-cart"></i>
-                            <h3>장바구니가 비어있습니다</h3>
-                            <p>상품을 클릭하여 장바구니에 추가해보세요</p>
+                            <i class="fas fa-database"></i>
+                            <h3>이벤트가 없습니다</h3>
+                            <p>장바구니 활동이 시작되면 이벤트가 표시됩니다</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Cart History Section -->
-        <div class="history-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <i class="fas fa-history"></i>
-                    장바구니 히스토리
+        <!-- Tab Content: Classic View -->
+        <div id="classicView" class="tab-content">
+            <div class="main-layout">
+                <!-- Products Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-store"></i>
+                            상품 카탈로그
+                        </div>
+                        <button class="create-cart-btn" onclick="createCart()">
+                            <i class="fas fa-plus"></i>
+                            새 장바구니 만들기
+                        </button>
+                    </div>
+                    <div class="product-grid" id="productsClassic">
+                        <!-- Products will be loaded here -->
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span id="historyCount">0개 장바구니</span>
+
+                <!-- Shopping Cart Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-shopping-bag"></i>
+                            현재 장바구니
+                            <span class="status opened" id="cartStatusClassic">새 카트</span>
+                        </div>
+                    </div>
+                    <div class="cart-content">
+                        <div id="cartContentClassic">
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-cart"></i>
+                                <h3>장바구니가 비어있습니다</h3>
+                                <p>상품을 클릭하여 장바구니에 추가해보세요</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="cartHistory">
-                <div class="empty-cart">
-                    <i class="fas fa-archive"></i>
-                    <h3>저장된 장바구니가 없습니다</h3>
-                    <p>장바구니를 생성하면 자동으로 히스토리에 저장됩니다</p>
+
+            <!-- Cart History Section -->
+            <div class="history-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-history"></i>
+                        장바구니 히스토리
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span id="historyCountClassic">0개 장바구니</span>
+                    </div>
+                </div>
+                <div id="cartHistoryClassic">
+                    <div class="empty-cart">
+                        <i class="fas fa-archive"></i>
+                        <h3>저장된 장바구니가 없습니다</h3>
+                        <p>장바구니를 생성하면 자동으로 히스토리에 저장됩니다</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -984,6 +1192,9 @@
         let currentCart = null;
         let products = [];
         let cartHistory = [];
+        let eventHistory = [];
+        let currentView = 'grid';
+        let selectedCartId = null;
 
 
         // Load products
@@ -1012,8 +1223,7 @@
         }
 
         function renderProducts() {
-            const container = document.getElementById('products');
-            container.innerHTML = products.map((product, index) => `
+            const productHTML = products.map((product, index) => `
                 <div class="product-card" onclick="addToCart('${product.productId}', '${product.productName}', ${product.price})">
                     <i class="product-icon ${getProductIcon(index)}"></i>
                     <div class="product-name">${product.productName}</div>
@@ -1023,6 +1233,10 @@
                     </div>
                 </div>
             `).join('');
+
+            // Update both grid and classic view product containers
+            document.getElementById('products').innerHTML = productHTML;
+            document.getElementById('productsClassic').innerHTML = productHTML;
         }
 
         // Create cart
@@ -1176,8 +1390,15 @@
 
         // Render cart
         function renderCart() {
-            const container = document.getElementById('cartContent');
-            const statusEl = document.getElementById('cartStatus');
+            renderCartForView('cartContent', 'cartStatus');
+            renderCartForView('cartContentClassic', 'cartStatusClassic');
+        }
+
+        function renderCartForView(containerId, statusId) {
+            const container = document.getElementById(containerId);
+            const statusEl = document.getElementById(statusId);
+
+            console.log(`Rendering cart for ${containerId}:`, currentCart);
 
             if (!currentCart) {
                 container.innerHTML = `
@@ -1278,7 +1499,10 @@
                 const response = await fetch('/api/carts');
                 if (response.ok) {
                     cartHistory = await response.json();
+                    console.log('Loaded cart history:', cartHistory);
                     renderCartHistory();
+                } else {
+                    console.error('Failed to fetch carts:', response.status, response.statusText);
                 }
             } catch (error) {
                 console.warn('Failed to load cart history from server:', error);
@@ -1290,14 +1514,20 @@
         function addToCartHistory(cart) {
             // No action needed - cart is already stored in JSON files on server
             // Just reload history from server
-            loadCartHistory();
+            setTimeout(() => {
+                loadCartHistory();
+                loadEventHistory(); // Also reload events when cart changes
+            }, 100); // Small delay to ensure server has written the file
         }
 
         // Update cart in history (no action needed - server handles this)
         function updateCartHistory(cart) {
             // No action needed - cart is already updated in JSON files on server
             // Just reload history from server
-            loadCartHistory();
+            setTimeout(() => {
+                loadCartHistory();
+                loadEventHistory(); // Also reload events when cart changes
+            }, 100); // Small delay to ensure server has written the file
         }
 
         // Load cart from server (for internal use)
@@ -1306,25 +1536,35 @@
             if (!response.ok) throw new Error('Failed to load cart');
 
             const data = await response.json();
+            console.log('Loaded cart data from server:', data);
+
             currentCart = {
                 id: data.id,
                 status: data.status,
                 items: data.items ? data.items.map(item => ({
                     productId: item.productId,
                     productName: item.productName,
-                    price: item.unitPrice,
+                    price: item.unitPrice, // Server returns unitPrice
                     quantity: item.quantity
                 })) : [],
                 revision: data.revision
             };
+
+            console.log('Processed currentCart:', currentCart);
         }
 
         // Load specific cart
-        async function loadCart(cartId) {
+        async function loadCart(cartId, showAlertMessage = true) {
             try {
                 await loadCartFromServer(cartId);
                 renderCart();
-                showAlert('장바구니를 불러왔습니다', 'success');
+
+                if (showAlertMessage) {
+                    showAlert('장바구니를 불러왔습니다', 'success');
+                }
+
+                // Also reload cart history to get updated data
+                loadCartHistory();
             } catch (error) {
                 showAlert('장바구니를 불러오는데 실패했습니다', 'error');
             }
@@ -1332,8 +1572,15 @@
 
         // Render cart history
         function renderCartHistory() {
-            const container = document.getElementById('cartHistory');
-            const historyCountEl = document.getElementById('historyCount');
+            renderCartHistoryForView('cartHistory', 'historyCount');
+            renderCartHistoryForView('cartHistoryClassic', 'historyCountClassic');
+        }
+
+        function renderCartHistoryForView(containerId, countId) {
+            const container = document.getElementById(containerId);
+            const historyCountEl = document.getElementById(countId);
+
+            console.log(`Rendering cart history for ${containerId}:`, cartHistory);
 
             // Update history count
             historyCountEl.textContent = `${cartHistory.length}개 장바구니`;
@@ -1352,7 +1599,7 @@
             container.innerHTML = `
                 <div style="display: grid; gap: 0.75rem;">
                     ${cartHistory.map(cart => {
-                        const total = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                        const total = cart.items.reduce((sum, item) => sum + ((item.unitPrice || item.price) * item.quantity), 0);
                         const itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
                         const date = new Date(cart.openedAt || cart.lastUpdated).toLocaleString('ko-KR');
 
@@ -1362,7 +1609,7 @@
                                           cart.status === 'Confirmed' ? 'fas fa-check-circle' : 'fas fa-times-circle';
 
                         return `
-                            <div class="history-item" onclick="loadCart('${cart.id}')">
+                            <div class="history-item ${selectedCartId === cart.id ? 'selected' : ''}" onclick="loadCartDirectly('${cart.id}')">
                                 <div class="cart-item-info">
                                     <div class="cart-item-name">
                                         <i class="fas fa-shopping-cart"></i>
@@ -1371,6 +1618,7 @@
                                             <i class="${statusIcon}"></i>
                                             ${statusText}
                                         </span>
+                                        ${selectedCartId === cart.id ? '<span style="color: var(--primary); margin-left: 0.5rem;"><i class="fas fa-eye"></i></span>' : ''}
                                     </div>
                                     <div class="cart-item-price">
                                         <i class="fas fa-box"></i>
@@ -1381,11 +1629,22 @@
                                         ${date}
                                     </div>
                                 </div>
-                                <div>
+                                <div style="display: flex; gap: 0.5rem;">
                                     <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="event.stopPropagation(); loadCart('${cart.id}')">
                                         <i class="fas fa-download"></i>
                                         불러오기
                                     </button>
+                                    ${selectedCartId === cart.id ? `
+                                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="event.stopPropagation(); clearEventFilter()">
+                                            <i class="fas fa-eye-slash"></i>
+                                            이벤트 해제
+                                        </button>
+                                    ` : `
+                                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="event.stopPropagation(); loadCartDirectly('${cart.id}')">
+                                            <i class="fas fa-eye"></i>
+                                            이벤트 보기
+                                        </button>
+                                    `}
                                 </div>
                             </div>
                         `;
@@ -1394,13 +1653,184 @@
             `;
         }
 
+        // Switch tab functionality
+        function switchTab(tabName) {
+            // Update tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            if (tabName === 'grid') {
+                tabButtons[0].classList.add('active');
+                document.getElementById('gridView').classList.add('active');
+                document.getElementById('classicView').classList.remove('active');
+            } else {
+                tabButtons[1].classList.add('active');
+                document.getElementById('classicView').classList.add('active');
+                document.getElementById('gridView').classList.remove('active');
+            }
+
+            currentView = tabName;
+        }
+
+        // Load event history from files
+        async function loadEventHistory() {
+            try {
+                const response = await fetch('/api/events');
+                if (response.ok) {
+                    eventHistory = await response.json();
+                    renderEventHistory();
+                }
+            } catch (error) {
+                console.warn('Failed to load event history:', error);
+                eventHistory = [];
+            }
+        }
+
+        // Render event history
+        function renderEventHistory() {
+            const container = document.getElementById('eventHistory');
+            const eventCountEl = document.getElementById('eventCount');
+
+            if (eventHistory.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-database"></i>
+                        <h3>이벤트가 없습니다</h3>
+                        <p>장바구니 활동이 시작되면 이벤트가 표시됩니다</p>
+                    </div>
+                `;
+                eventCountEl.textContent = '0개 이벤트';
+                return;
+            }
+
+            // Flatten all events from all streams
+            let allEvents = eventHistory.flatMap(stream =>
+                stream.events.map(event => ({
+                    ...event,
+                    streamId: stream.streamId
+                }))
+            );
+
+            // Filter events if a specific cart is selected
+            if (selectedCartId) {
+                allEvents = allEvents.filter(event => event.streamId === selectedCartId);
+                const selectedCartEvents = allEvents.length;
+                eventCountEl.innerHTML = `
+                    <span style="color: var(--primary); font-weight: 600;">${selectedCartEvents}개 이벤트</span>
+                    <span style="color: var(--text-light); font-size: 0.75rem; margin-left: 0.5rem;">
+                        (장바구니 #${selectedCartId.slice(0, 8)})
+                    </span>
+                `;
+            } else {
+                eventCountEl.textContent = `${allEvents.length}개 이벤트`;
+            }
+
+            // Sort by timestamp
+            allEvents.sort((a, b) => new Date(b.data.addedAt || b.data.openedAt || 0) - new Date(a.data.addedAt || a.data.openedAt || 0));
+
+            if (allEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-filter"></i>
+                        <h3>선택된 장바구니의 이벤트가 없습니다</h3>
+                        <p>다른 장바구니를 선택하거나 모든 이벤트를 보려면 클릭하세요</p>
+                        <button class="btn btn-secondary" onclick="clearEventFilter()" style="margin-top: 1rem;">
+                            <i class="fas fa-times"></i>
+                            필터 해제
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                ${selectedCartId ? `
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-primary); font-weight: 500;">
+                            <i class="fas fa-filter"></i>
+                            장바구니 #${selectedCartId.slice(0, 8)} 이벤트
+                        </span>
+                        <button class="btn btn-secondary" onclick="clearEventFilter()" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                            <i class="fas fa-times"></i>
+                            필터 해제
+                        </button>
+                    </div>
+                ` : ''}
+                ${allEvents.map(event => {
+                    const timestamp = new Date(event.data.addedAt || event.data.openedAt || event.data.confirmedAt || event.data.cancelledAt).toLocaleString('ko-KR');
+
+                    let eventData = '';
+                    if (event.type === 'ShoppingCartOpened') {
+                        eventData = `장바구니 생성: ${event.data.shoppingCartId.slice(0, 8)}`;
+                    } else if (event.type === 'ProductItemAddedToShoppingCart') {
+                        eventData = `상품 추가: ${event.data.productItem.productName} (수량: ${event.data.productItem.quantity}, 가격: $${event.data.productItem.unitPrice})`;
+                    } else if (event.type === 'ProductItemRemovedFromShoppingCart') {
+                        eventData = `상품 제거: ${event.data.productItem.productName} (수량: ${event.data.productItem.quantity})`;
+                    } else if (event.type === 'ShoppingCartConfirmed') {
+                        eventData = `장바구니 확정: ${event.data.shoppingCartId.slice(0, 8)}`;
+                    } else if (event.type === 'ShoppingCartCancelled') {
+                        eventData = `장바구니 취소: ${event.data.shoppingCartId.slice(0, 8)}`;
+                    } else {
+                        eventData = JSON.stringify(event.data, null, 2);
+                    }
+
+                    return `
+                        <div class="event-item ${event.streamId === selectedCartId ? 'highlighted' : ''}">
+                            <div class="event-timestamp">${timestamp}</div>
+                            <div class="event-type">${event.type}</div>
+                            <div class="event-data">${eventData}</div>
+                        </div>
+                    `;
+                }).join('')}
+            `;
+        }
+
+        // Select cart for event filtering and load cart content
+        function selectCartForEvents(cartId) {
+            selectedCartId = cartId;
+
+            // Also load the cart to show its content in the cart list (without showing alert)
+            loadCart(cartId, false);
+
+            renderEventHistory();
+            renderCartHistory(); // Re-render to show selection state
+            showAlert(`장바구니 #${cartId.slice(0, 8)}를 선택했습니다`, 'success');
+        }
+
+        // Load cart directly (for history item clicks)
+        function loadCartDirectly(cartId) {
+            selectedCartId = cartId;
+            loadCart(cartId, false);
+            renderEventHistory();
+            renderCartHistory();
+            showAlert(`장바구니 #${cartId.slice(0, 8)}를 선택했습니다`, 'success');
+        }
+
+        // Clear event filter
+        function clearEventFilter() {
+            selectedCartId = null;
+            renderEventHistory();
+            renderCartHistory(); // Re-render to clear selection state
+            showAlert('이벤트 필터를 해제했습니다', 'success');
+        }
+
         // Initialize app
         async function init() {
             await loadProducts();
             loadCartHistory();
-            if (currentCartId) {
-                loadCart();
-            }
+            loadEventHistory();
+
+            // Test cart loading for debugging
+            window.testLoadCart = async function(cartId) {
+                console.log('Testing cart load for:', cartId);
+                try {
+                    await loadCartFromServer(cartId);
+                    console.log('Current cart after load:', currentCart);
+                    renderCart();
+                } catch (error) {
+                    console.error('Error loading cart:', error);
+                }
+            };
         }
 
         // Initialize on load
