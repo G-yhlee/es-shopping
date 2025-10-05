@@ -216,5 +216,56 @@ export const shoppingCartApi = (
     }
   });
 
+  // Delete specific cart
+  router.delete('/carts/:id', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const fs = await import('fs/promises');
+      const path = await import('path');
+
+      const eventFilePath = path.join(process.cwd(), 'data', 'events', `${id}.json`);
+
+      // Check if file exists
+      try {
+        await fs.access(eventFilePath);
+        await fs.unlink(eventFilePath);
+        res.status(200).json({ message: 'Cart deleted successfully' });
+      } catch (fileError) {
+        res.status(404).json({ error: 'Cart not found' });
+      }
+    } catch (error) {
+      console.error('Error deleting cart:', error);
+      res.status(500).json({ error: 'Failed to delete cart' });
+    }
+  });
+
+  // Delete all carts
+  router.delete('/carts', async (req: Request, res: Response) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+
+      const dataDir = path.join(process.cwd(), 'data', 'events');
+      const files = await fs.readdir(dataDir);
+
+      let deletedCount = 0;
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const filePath = path.join(dataDir, file);
+          await fs.unlink(filePath);
+          deletedCount++;
+        }
+      }
+
+      res.status(200).json({
+        message: `Successfully deleted ${deletedCount} carts`,
+        deletedCount
+      });
+    } catch (error) {
+      console.error('Error deleting all carts:', error);
+      res.status(500).json({ error: 'Failed to delete all carts' });
+    }
+  });
+
   return router;
 };

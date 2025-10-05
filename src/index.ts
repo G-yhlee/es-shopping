@@ -62,6 +62,8 @@ app.get('/api', (req, res) => {
       'POST /carts/:id/cancel': 'Cancel cart',
       'GET /carts/:id': 'Get cart details',
       'GET /carts': 'Get all carts',
+      'DELETE /carts/:id': 'Delete specific cart',
+      'DELETE /carts': 'Delete all carts',
       'GET /events': 'Get all events',
     },
     sampleProducts: Array.from(productCatalog.entries()).map(([id, price]) => ({

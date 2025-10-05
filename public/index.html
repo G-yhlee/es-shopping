@@ -7,6 +7,7 @@
     <title>ES-MALL - Shopping Cart Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         :root {
             --sidebar-width: 240px;
@@ -135,10 +136,11 @@
             color: white;
         }
 
-        .nav-item i {
+        .nav-item i,
+        .nav-icon {
             width: 20px;
-            text-align: center;
-            font-size: 1rem;
+            height: 20px;
+            stroke-width: 2;
         }
 
         .nav-badge {
@@ -295,8 +297,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            color: var(--primary);
+        }
+
+        .stat-icon i {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
         }
 
         .stat-content {
@@ -375,10 +381,14 @@
             border-color: var(--primary);
         }
 
+        .product-icon-wrapper {
+            margin-bottom: 1rem;
+        }
+
         .product-icon {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+            width: 48px;
+            height: 48px;
+            stroke-width: 1.5;
         }
 
         .product-name {
@@ -694,6 +704,7 @@
             align-items: center;
             transition: all 0.2s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .history-item:hover {
@@ -701,13 +712,22 @@
             box-shadow: var(--shadow-md);
         }
 
+        .history-info:hover {
+            cursor: pointer;
+        }
+
         .history-item.selected {
             border-color: var(--primary);
             background: rgba(99, 102, 241, 0.05);
         }
 
+        .history-item.selected .history-info {
+            border-color: var(--primary);
+        }
+
         .history-info {
             flex: 1;
+            margin-right: 1rem;
         }
 
         .history-id {
@@ -742,6 +762,758 @@
             background: rgba(239, 68, 68, 0.1);
             color: var(--error);
         }
+
+        .history-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .delete-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--error);
+            color: white;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .delete-btn i {
+            font-size: 0.875rem;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 1200px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        .modal-body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+        }
+
+        .modal-section {
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .modal-section:first-child {
+            border-right: 1px solid var(--border);
+        }
+
+        .modal-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-section:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+        }
+
+        /* Simulation Styles */
+        .flow-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+        }
+
+        .flow-step:hover {
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border: 3px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .step-icon i {
+            width: 28px;
+            height: 28px;
+            stroke-width: 2;
+        }
+
+        .flow-step.active .step-icon {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .flow-step.completed .step-icon {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .flow-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .flow-step.completed .step-label {
+            color: var(--success);
+        }
+
+        .flow-line {
+            flex: 1;
+            height: 3px;
+            background: var(--border);
+            position: relative;
+            margin: 0 -1rem;
+        }
+
+        .flow-line.completed {
+            background: var(--success);
+        }
+
+        .simulation-content {
+            padding: 2rem;
+        }
+
+        .simulation-step {
+            display: none;
+        }
+
+        .simulation-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .step-header h3 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-header p {
+            color: var(--text-secondary);
+        }
+
+        .step-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+        }
+
+        .simulation-info {
+            margin-top: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cart-id {
+            margin-left: auto;
+            font-family: monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .sim-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .sim-product-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sim-product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .sim-product-card.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .sim-product-card.selected::after {
+            content: '\2713';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .sim-product-icon-wrapper {
+            margin-bottom: 1rem;
+        }
+
+        .sim-product-icon {
+            width: 64px;
+            height: 64px;
+            stroke-width: 1.5;
+        }
+
+        .sim-product-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sim-product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .sim-product-quantity {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .sim-actions,
+        .sim-step-nav {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        .sim-cart-review {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-summary {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-header {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .summary-items {
+            margin-bottom: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .simulation-result {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .result-card {
+            background: white;
+            border: 2px solid;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .result-card.success {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .result-card.cancelled {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-card.success .result-icon {
+            color: var(--success);
+        }
+
+        .result-card.cancelled .result-icon {
+            color: var(--error);
+        }
+
+        .result-message {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-details {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Product Form Styles */
+        .add-product-form {
+            background: var(--bg-tertiary);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .form-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .product-form {
+            max-width: 800px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .price-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency {
+            position: absolute;
+            left: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            z-index: 1;
+        }
+
+        .price-input input {
+            padding-left: 2rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card.deletable {
+            position: relative;
+        }
+
+        .product-card.deletable:hover .product-delete-btn {
+            opacity: 1;
+        }
+
+        .product-delete-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 24px;
+            height: 24px;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-delete-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Product Modal Styles */
+        .product-modal {
+            max-width: 900px;
+        }
+
+        .product-modal-body {
+            display: block;
+            padding: 2rem;
+        }
+
+        .product-detail-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .product-image-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            min-height: 250px;
+        }
+
+        .product-large-icon {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-large-icon i {
+            width: 100px;
+            height: 100px;
+            stroke-width: 1;
+        }
+
+        .product-info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .product-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-detail-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .product-detail-category {
+            display: inline-block;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .product-detail-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.875rem;
+        }
+
+        .product-detail-id {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            background: var(--bg-tertiary);
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail-section {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .product-image-section {
+                padding: 2rem;
+                min-height: 200px;
+            }
+
+            .product-large-icon i {
+                width: 80px;
+                height: 80px;
+            }
+
+            .product-detail-title {
+                font-size: 1.5rem;
+            }
+
+            .product-detail-price {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -751,7 +1523,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <i class="fas fa-shopping-cart"></i>
+                    <i data-lucide="shopping-cart" style="width: 24px; height: 24px; color: var(--primary);"></i>
                     <span>ES-MALL</span>
                 </div>
             </div>
@@ -759,17 +1531,21 @@
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">메인</div>
-                    <button class="nav-item active" onclick="switchView('dashboard')">
-                        <i class="fas fa-home"></i>
+                    <button class="nav-item active" onclick="switchView('dashboard', this)">
+                        <i data-lucide="gauge" class="nav-icon"></i>
                         <span>대시보드</span>
                     </button>
-                    <button class="nav-item" onclick="switchView('products')">
-                        <i class="fas fa-box"></i>
+                    <button class="nav-item" onclick="switchView('simulation', this)">
+                        <i data-lucide="play-circle" class="nav-icon"></i>
+                        <span>시뮬레이션</span>
+                    </button>
+                    <button class="nav-item" onclick="switchView('products', this)">
+                        <i data-lucide="package" class="nav-icon"></i>
                         <span>상품 관리</span>
                         <span class="nav-badge" id="productCount">0</span>
                     </button>
-                    <button class="nav-item" onclick="switchView('cart')">
-                        <i class="fas fa-shopping-cart"></i>
+                    <button class="nav-item" onclick="switchView('cart', this)">
+                        <i data-lucide="shopping-cart" class="nav-icon"></i>
                         <span>장바구니</span>
                         <span class="nav-badge" id="cartItemCount">0</span>
                     </button>
@@ -777,20 +1553,20 @@
 
                 <div class="nav-section">
                     <div class="nav-section-title">히스토리</div>
-                    <button class="nav-item" onclick="switchView('history')">
-                        <i class="fas fa-history"></i>
-                        <span>주문 내역</span>
+                    <button class="nav-item" onclick="switchView('history', this)">
+                        <i data-lucide="clock" class="nav-icon"></i>
+                        <span>장바구니별 이벤트</span>
                     </button>
-                    <button class="nav-item" onclick="switchView('events')">
-                        <i class="fas fa-database"></i>
-                        <span>이벤트 로그</span>
+                    <button class="nav-item" onclick="switchView('events', this)">
+                        <i data-lucide="database" class="nav-icon"></i>
+                        <span>전체 이벤트</span>
                     </button>
                 </div>
 
                 <div class="nav-section">
                     <div class="nav-section-title">설정</div>
-                    <button class="nav-item" onclick="switchView('settings')">
-                        <i class="fas fa-cog"></i>
+                    <button class="nav-item" onclick="switchView('settings', this)">
+                        <i data-lucide="settings" class="nav-icon"></i>
                         <span>시스템 설정</span>
                     </button>
                 </div>
@@ -818,12 +1594,7 @@
                         <span class="breadcrumb-active" id="currentPage">대시보드</span>
                     </div>
                 </div>
-                <div class="topbar-right">
-                    <button class="topbar-button" onclick="createCart()">
-                        <i class="fas fa-plus"></i>
-                        새 장바구니
-                    </button>
-                </div>
+
             </header>
 
             <!-- Content Area -->
@@ -834,7 +1605,7 @@
                     <div class="stats-row">
                         <div class="stat-card">
                             <div class="stat-icon">
-                                <i class="fas fa-shopping-cart"></i>
+                                <i data-lucide="shopping-cart" style="color: #3b82f6;"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">총 장바구니</div>
@@ -843,7 +1614,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon">
-                                <i class="fas fa-check-circle"></i>
+                                <i data-lucide="check-circle" style="color: #10b981;"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">확정된 주문</div>
@@ -852,7 +1623,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon">
-                                <i class="fas fa-box"></i>
+                                <i data-lucide="package" style="color: #f59e0b;"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">등록 상품</div>
@@ -861,7 +1632,7 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon">
-                                <i class="fas fa-database"></i>
+                                <i data-lucide="database" style="color: #8b5cf6;"></i>
                             </div>
                             <div class="stat-content">
                                 <div class="stat-label">총 이벤트</div>
@@ -931,13 +1702,88 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-box"></i>
+                                <i data-lucide="package" class="nav-icon"></i>
                                 상품 관리
                             </h3>
+                            <button class="topbar-button" onclick="showAddProductForm()">
+                                <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                                새 상품 등록
+                            </button>
                         </div>
                         <div class="card-body">
-                            <div class="products-grid" id="productsManagement">
-                                <!-- Products will be loaded here -->
+                            <!-- Add Product Form -->
+                            <div class="add-product-form" id="addProductForm" style="display: none;">
+                                <h4 class="form-title">
+                                    <i data-lucide="package-plus"
+                                        style="width: 20px; height: 20px; margin-right: 0.5rem;"></i>
+                                    새 상품 등록
+                                </h4>
+                                <form class="product-form" onsubmit="addNewProduct(event)">
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label for="productName">상품명 *</label>
+                                            <input type="text" id="productName" name="productName" required
+                                                placeholder="상품명을 입력하세요">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="productPrice">가격 *</label>
+                                            <div class="price-input">
+                                                <span class="currency">$</span>
+                                                <input type="number" id="productPrice" name="productPrice" step="0.01"
+                                                    min="0" required placeholder="0.00">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="productCategory">카테고리</label>
+                                            <select id="productCategory" name="productCategory">
+                                                <option value="electronics">전자제품</option>
+                                                <option value="computer">컴퓨터</option>
+                                                <option value="accessories">액세서리</option>
+                                                <option value="mobile">모바일</option>
+                                                <option value="gaming">게임</option>
+                                                <option value="other">기타</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="productIcon">아이콘</label>
+                                            <select id="productIcon" name="productIcon">
+                                                <option value="laptop">노트북</option>
+                                                <option value="mouse">마우스</option>
+                                                <option value="keyboard">키보드</option>
+                                                <option value="monitor">모니터</option>
+                                                <option value="headphones">헤드셉</option>
+                                                <option value="smartphone">스마트폰</option>
+                                                <option value="tablet">태블릿</option>
+                                                <option value="speaker">스피커</option>
+                                                <option value="camera">카메라</option>
+                                                <option value="gamepad-2">게임패드</option>
+                                                <option value="shopping-bag">기타</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="productDescription">상품 설명</label>
+                                        <textarea id="productDescription" name="productDescription" rows="3"
+                                            placeholder="상품에 대한 설명을 입력하세요"></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-secondary" onclick="hideAddProductForm()">
+                                            <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                                            취소
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                                            등록
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Products Grid -->
+                            <div class="products-section" id="productsSection">
+                                <div class="products-grid" id="productsManagement">
+                                    <!-- Products will be loaded here -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -971,8 +1817,13 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-history"></i>
-                                주문 내역
+                                장바구니별 이벤트
                             </h3>
+                            <button class="topbar-button" onclick="deleteAllCarts()" id="deleteAllBtn"
+                                style="background: var(--error);">
+                                <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                                전체 삭제
+                            </button>
                         </div>
                         <div class="card-body">
                             <div class="history-grid" id="cartHistory">
@@ -992,7 +1843,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-database"></i>
-                                이벤트 로그
+                                전체 이벤트
                             </h3>
                         </div>
                         <div class="card-body">
@@ -1021,12 +1872,240 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Simulation View -->
+                <div id="simulationView" class="tab-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-play-circle"></i>
+                                쇼핑 플로우 시뮬레이션
+                            </h3>
+                            <button class="topbar-button" onclick="resetSimulation()">
+                                <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+                                초기화
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- Flow Progress Bar -->
+                            <div class="flow-progress">
+                                <div class="flow-step active" data-step="1" onclick="goToSimulationStep(1)">
+                                    <div class="step-icon">
+                                        <i data-lucide="shopping-cart"></i>
+                                    </div>
+                                    <div class="step-label">장바구니 생성</div>
+                                </div>
+                                <div class="flow-line"></div>
+                                <div class="flow-step" data-step="2" onclick="goToSimulationStep(2)">
+                                    <div class="step-icon">
+                                        <i data-lucide="package-search"></i>
+                                    </div>
+                                    <div class="step-label">상품 선택</div>
+                                </div>
+                                <div class="flow-line"></div>
+                                <div class="flow-step" data-step="3" onclick="goToSimulationStep(3)">
+                                    <div class="step-icon">
+                                        <i data-lucide="clipboard-check"></i>
+                                    </div>
+                                    <div class="step-label">장바구니 확인</div>
+                                </div>
+                                <div class="flow-line"></div>
+                                <div class="flow-step" data-step="4" onclick="goToSimulationStep(4)">
+                                    <div class="step-icon">
+                                        <i data-lucide="circle-check"></i>
+                                    </div>
+                                    <div class="step-label">주문 확정</div>
+                                </div>
+                            </div>
+
+                            <!-- Simulation Content -->
+                            <div class="simulation-content" id="simulationContent">
+                                <!-- Step 1: Create Cart -->
+                                <div class="simulation-step active" data-step="1">
+                                    <div class="step-header">
+                                        <h3><i data-lucide="shopping-cart"
+                                                style="width: 24px; height: 24px; margin-right: 0.5rem;"></i> 장바구니 생성
+                                        </h3>
+                                        <p>새로운 쇼핑 세션을 시작합니다</p>
+                                    </div>
+                                    <div class="step-content">
+                                        <button class="btn btn-primary btn-lg" onclick="createSimulationCart()">
+                                            <i data-lucide="plus" style="width: 20px; height: 20px;"></i>
+                                            새 장바구니 생성
+                                        </button>
+                                        <div class="simulation-info" id="cartInfo" style="display: none;">
+                                            <div class="info-card">
+                                                <i data-lucide="check-circle"
+                                                    style="color: var(--success); width: 20px; height: 20px;"></i>
+                                                <span>장바구니가 생성되었습니다</span>
+                                                <span class="cart-id" id="simCartId"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 2: Select Products -->
+                                <div class="simulation-step" data-step="2">
+                                    <div class="step-header">
+                                        <h3><i data-lucide="package-search"
+                                                style="width: 24px; height: 24px; margin-right: 0.5rem;"></i> 상품 선택</h3>
+                                        <p>장바구니에 추가할 상품을 선택하세요</p>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="sim-products-grid" id="simProducts">
+                                            <!-- Products will be loaded here -->
+                                        </div>
+                                        <div class="sim-step-nav" style="margin-top: 1rem;">
+                                            <button class="btn btn-secondary" onclick="prevSimulationStep()"
+                                                ${simulationStep <=1 ? 'disabled' : '' }>
+                                                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+                                                이전
+                                            </button>
+                                            <button class="btn btn-primary" onclick="nextSimulationStep()">
+                                                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                                                다음 단계
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3: Review Cart -->
+                                <div class="simulation-step" data-step="3">
+                                    <div class="step-header">
+                                        <h3><i data-lucide="clipboard-check"
+                                                style="width: 24px; height: 24px; margin-right: 0.5rem;"></i> 장바구니 확인
+                                        </h3>
+                                        <p>선택한 상품을 확인하고 수량을 조정하세요</p>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="sim-cart-review" id="simCartReview">
+                                            <!-- Cart items will be displayed here -->
+                                        </div>
+                                        <div class="sim-actions">
+                                            <button class="btn btn-secondary" onclick="prevSimulationStep()">
+                                                <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+                                                이전 단계
+                                            </button>
+                                            <button class="btn btn-primary" onclick="nextSimulationStep()">
+                                                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                                                다음 단계
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4: Confirm Order -->
+                                <div class="simulation-step" data-step="4">
+                                    <div class="step-header">
+                                        <h3><i data-lucide="circle-check"
+                                                style="width: 24px; height: 24px; margin-right: 0.5rem;"></i> 주문 확정</h3>
+                                        <p>주문을 확정하거나 취소합니다</p>
+                                    </div>
+                                    <div class="step-content">
+                                        <div class="order-summary" id="orderSummary">
+                                            <!-- Order summary will be displayed here -->
+                                        </div>
+                                        <div class="sim-actions">
+                                            <button class="btn btn-danger" onclick="cancelSimulationOrder()">
+                                                <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                                                주문 취소
+                                            </button>
+                                            <button class="btn btn-success" onclick="confirmSimulationOrder()">
+                                                <i data-lucide="check" style="width: 16px; height: 16px;"></i>
+                                                주문 확정
+                                            </button>
+                                        </div>
+                                        <div class="simulation-result" id="simResult" style="display: none;">
+                                            <!-- Result will be displayed here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
     <!-- Alert -->
     <div id="alert" class="alert"></div>
+
+    <!-- Modal for Cart Details -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="modalCartTitle">장바구니 상세</span>
+                </h2>
+                <div class="modal-header-actions">
+                    <button class="topbar-button" onclick="goToSimulationFromModal()" id="simGoBtn">
+                        <i data-lucide="play-circle" style="width: 16px; height: 16px;"></i>
+                        시뮬레이션
+                    </button>
+                    <button class="modal-close" onclick="closeModal()">
+                        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="fas fa-shopping-bag"></i>
+                        장바구니 내용
+                    </h3>
+                    <div id="modalCartContent">
+                        <!-- Cart items will be displayed here -->
+                    </div>
+                </div>
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <i class="fas fa-database"></i>
+                        이벤트 히스토리
+                    </h3>
+                    <div id="modalEventContent">
+                        <!-- Events will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Product Details -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-container product-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i data-lucide="package" style="width: 24px; height: 24px; color: var(--primary);"></i>
+                    <span id="modalProductTitle">상품 상세정보</span>
+                </h2>
+                <div class="modal-header-actions">
+                    <button class="topbar-button" onclick="addToCartFromModal()" id="addToCartBtn">
+                        <i data-lucide="shopping-cart" style="width: 16px; height: 16px;"></i>
+                        장바구니 추가
+                    </button>
+                    <button class="modal-close" onclick="closeProductModal()">
+                        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body product-modal-body">
+                <div class="product-detail-section">
+                    <div class="product-image-section">
+                        <div class="product-large-icon" id="modalProductIcon">
+                            <!-- Product icon will be displayed here -->
+                        </div>
+                    </div>
+                    <div class="product-info-section">
+                        <div id="modalProductInfo">
+                            <!-- Product info will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         let currentCart = null;
@@ -1056,23 +2135,59 @@
             return names[index] || `상품 ${index + 1}`;
         }
 
-        function getProductIcon(index) {
+        function getProductIcon(index, isLucide = false) {
+            if (isLucide) {
+                const lucideIcons = ['laptop', 'mouse', 'keyboard', 'monitor', 'headphones'];
+                return lucideIcons[index] || 'shopping-bag';
+            }
             const icons = ['fas fa-laptop', 'fas fa-computer-mouse', 'fas fa-keyboard', 'fas fa-desktop', 'fas fa-headphones'];
             return icons[index] || 'fas fa-shopping-bag';
         }
 
+        function getProductColor(index) {
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'];
+            return colors[index] || '#6366f1';
+        }
+
         function renderProducts() {
+            // Regular product cards for dashboard and cart views
             const productHTML = products.map((product, index) => `
                 <div class="product-card" onclick="addToCart('${product.productId}', '${product.productName}', ${product.price})">
-                    <i class="product-icon ${getProductIcon(index)}"></i>
+                    <div class="product-icon-wrapper">
+                        <i data-lucide="${product.icon || getProductIcon(index, true)}" class="product-icon" style="color: ${getProductColor(index)}"></i>
+                    </div>
                     <div class="product-name">${product.productName}</div>
                     <div class="product-price">$${product.price}</div>
                 </div>
             `).join('');
 
+            // Management view with product detail modal and delete buttons for custom products
+            const managementHTML = products.map((product, index) => {
+                const isCustomProduct = product.productId.startsWith('product-2'); // Custom products have timestamp IDs
+                return `
+                    <div class="product-card ${isCustomProduct ? 'deletable' : ''}" onclick="openProductModal('${product.productId}')">
+                        <div class="product-icon-wrapper">
+                            <i data-lucide="${product.icon || getProductIcon(index, true)}" class="product-icon" style="color: ${getProductColor(index)}"></i>
+                        </div>
+                        <div class="product-name">${product.productName}</div>
+                        <div class="product-price">$${product.price}</div>
+                        ${isCustomProduct ? `
+                            <button class="product-delete-btn" onclick="deleteProduct('${product.productId}', event)" title="상품 삭제">
+                                <i data-lucide="x" style="width: 12px; height: 12px;"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
             document.getElementById('products').innerHTML = productHTML;
-            document.getElementById('productsManagement').innerHTML = productHTML;
+            document.getElementById('productsManagement').innerHTML = managementHTML;
             document.getElementById('productCount').textContent = products.length;
+
+            // Initialize Lucide icons after dynamic content
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 100);
         }
 
         // Create cart
@@ -1301,11 +2416,11 @@
                         ${currentCart.status === 'Opened' ? `
                             <div class="cart-actions">
                                 <button class="btn btn-success" onclick="confirmCart()">
-                                    <i class="fas fa-check"></i>
+                                    <i data-lucide="check" style="width: 16px; height: 16px;"></i>
                                     확정
                                 </button>
                                 <button class="btn btn-danger" onclick="cancelCart()">
-                                    <i class="fas fa-times"></i>
+                                    <i data-lucide="x" style="width: 16px; height: 16px;"></i>
                                     취소
                                 </button>
                             </div>
@@ -1336,6 +2451,12 @@
         // Render cart history
         function renderCartHistory() {
             const container = document.getElementById('cartHistory');
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+
+            // Show/hide delete all button based on cart count
+            if (deleteAllBtn) {
+                deleteAllBtn.style.display = cartHistory.length > 0 ? 'flex' : 'none';
+            }
 
             if (cartHistory.length === 0) {
                 container.innerHTML = `
@@ -1354,17 +2475,22 @@
                 const date = new Date(cart.openedAt || cart.lastUpdated).toLocaleString('ko-KR');
 
                 return `
-                    <div class="history-item ${selectedCartId === cart.id ? 'selected' : ''}" onclick="loadCart('${cart.id}')">
-                        <div class="history-info">
+                    <div class="history-item ${selectedCartId === cart.id ? 'selected' : ''}">
+                        <div class="history-info" onclick="openCartModal('${cart.id}')">
                             <div class="history-id">장바구니 #${cart.id.slice(0, 8)}</div>
                             <div class="history-meta">
                                 ${itemCount}개 상품 • $${total.toFixed(2)} • ${date}
                             </div>
                         </div>
-                        <span class="status-badge ${cart.status.toLowerCase()}">
-                            ${cart.status === 'Opened' ? '진행중' :
+                        <div class="history-actions">
+                            <span class="status-badge ${cart.status.toLowerCase()}">
+                                ${cart.status === 'Opened' ? '진행중' :
                         cart.status === 'Confirmed' ? '확정됨' : '취소됨'}
-                        </span>
+                            </span>
+                            <button class="delete-btn" onclick="deleteCart('${cart.id}', event)" title="장바구니 삭제">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
             }).reverse().join('');
@@ -1455,10 +2581,19 @@
         }
 
         // Switch view
-        function switchView(viewName) {
+        function switchView(viewName, element) {
             // Update nav items
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            } else {
+                // If no element passed, find and activate the correct nav item
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    if (item.onclick && item.onclick.toString().includes(viewName)) {
+                        item.classList.add('active');
+                    }
+                });
+            }
 
             // Update views
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -1467,10 +2602,11 @@
             // Update breadcrumb
             const breadcrumbText = {
                 dashboard: '대시보드',
+                simulation: '시뮬레이션',
                 products: '상품 관리',
                 cart: '장바구니',
-                history: '주문 내역',
-                events: '이벤트 로그',
+                history: '장바구니별 이벤트',
+                events: '전체 이벤트',
                 settings: '시스템 설정'
             };
             document.getElementById('currentPage').textContent = breadcrumbText[viewName];
@@ -1488,11 +2624,840 @@
             }, 3000);
         }
 
+        // Modal Functions
+        function openCartModal(cartId) {
+            const modal = document.getElementById('cartModal');
+            const cart = cartHistory.find(c => c.id === cartId);
+
+            if (!cart) {
+                showAlert('장바구니를 찾을 수 없습니다', 'error');
+                return;
+            }
+
+            // Store selected cart ID for simulation
+            selectedCartId = cartId;
+
+            // Update modal title
+            document.getElementById('modalCartTitle').textContent = `장바구니 #${cartId.slice(0, 8)}`;
+
+            // Show/hide simulation button based on cart status
+            const simBtn = document.getElementById('simGoBtn');
+            if (simBtn) {
+                // Always show simulation button - user can simulate any cart state
+                simBtn.style.display = 'flex';
+            }
+
+            // Render cart content
+            renderModalCart(cart);
+
+            // Render events for this cart
+            renderModalEvents(cartId);
+
+            // Show modal
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.remove('active');
+        }
+
+        function goToSimulationFromModal() {
+            const cart = cartHistory.find(c => c.id === selectedCartId);
+            if (!cart) {
+                showAlert('장바구니를 찾을 수 없습니다', 'error');
+                return;
+            }
+
+            // Close modal first
+            closeModal();
+
+            // Set the cart as current cart for simulation
+            currentCart = {
+                id: cart.id,
+                status: cart.status,
+                items: cart.items ? cart.items.map(item => ({
+                    productId: item.productId,
+                    productName: item.productName,
+                    price: item.unitPrice || item.price,
+                    quantity: item.quantity
+                })) : [],
+                revision: cart.revision
+            };
+
+            // Set simulation cart
+            simulationCart = { ...currentCart };
+            selectedSimProducts = currentCart.items.map(item => ({
+                productId: item.productId,
+                productName: item.productName,
+                price: item.price,
+                quantity: item.quantity
+            }));
+
+            // Determine simulation step based on cart status
+            if (cart.status === 'Opened') {
+                // If cart is still open, start from step 3 (review)
+                simulationStep = 3;
+            } else {
+                // If cart is confirmed/cancelled, start from step 4 (final result)
+                simulationStep = 4;
+            }
+
+            // Switch to simulation view
+            switchView('simulation');
+
+            // Update simulation UI
+            updateSimulationUI();
+
+            // Show appropriate result if cart is already finalized
+            if (cart.status === 'Confirmed' || cart.status === 'Cancelled') {
+                setTimeout(() => {
+                    showSimulationResult(cart.status === 'Confirmed');
+                }, 500);
+            }
+
+            showAlert('시뮬레이션으로 이동했습니다', 'success');
+        }
+
+        function renderModalCart(cart) {
+            const container = document.getElementById('modalCartContent');
+
+            if (!cart.items || cart.items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>장바구니가 비어있습니다</h3>
+                        <p>이 장바구니에는 상품이 없습니다</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const total = cart.items.reduce((sum, item) => sum + ((item.unitPrice || item.price) * item.quantity), 0);
+            const itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            const statusText = cart.status === 'Opened' ? '진행중' :
+                cart.status === 'Confirmed' ? '확정됨' : '취소됨';
+
+            container.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <span class="status-badge ${cart.status.toLowerCase()}">${statusText}</span>
+                    <span style="margin-left: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                        ${new Date(cart.openedAt || cart.lastUpdated).toLocaleString('ko-KR')}
+                    </span>
+                </div>
+                <div class="cart-items">
+                    ${cart.items.map(item => `
+                        <div class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${item.productName}</div>
+                                <div class="cart-item-price">$${item.unitPrice || item.price} × ${item.quantity}</div>
+                            </div>
+                            <div style="font-weight: 600; color: var(--primary);">
+                                $${((item.unitPrice || item.price) * item.quantity).toFixed(2)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-total">
+                    <div class="total-label">총 ${itemCount}개 상품</div>
+                    <div class="total-amount">$${total.toFixed(2)}</div>
+                </div>
+            `;
+        }
+
+        function renderModalEvents(cartId) {
+            const container = document.getElementById('modalEventContent');
+
+            // Find events for this cart
+            const cartEvents = eventHistory.find(stream => stream.streamId === cartId);
+
+            if (!cartEvents || cartEvents.events.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-database"></i>
+                        <h3>이벤트가 없습니다</h3>
+                        <p>이 장바구니에 대한 이벤트가 없습니다</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort events by timestamp
+            const sortedEvents = [...cartEvents.events].sort((a, b) => {
+                const aTime = new Date(a.data.addedAt || a.data.openedAt || a.data.confirmedAt || a.data.cancelledAt || 0);
+                const bTime = new Date(b.data.addedAt || b.data.openedAt || b.data.confirmedAt || b.data.cancelledAt || 0);
+                return aTime - bTime;
+            });
+
+            container.innerHTML = `
+                <div class="event-items">
+                    ${sortedEvents.map(event => {
+                const timestamp = new Date(
+                    event.data.addedAt ||
+                    event.data.openedAt ||
+                    event.data.confirmedAt ||
+                    event.data.cancelledAt
+                ).toLocaleString('ko-KR');
+
+                let eventData = '';
+                if (event.type === 'ShoppingCartOpened') {
+                    eventData = `장바구니 생성`;
+                } else if (event.type === 'ProductItemAddedToShoppingCart') {
+                    eventData = `${event.data.productItem.productName} 추가 (${event.data.productItem.quantity}개, $${event.data.productItem.unitPrice})`;
+                } else if (event.type === 'ProductItemRemovedFromShoppingCart') {
+                    eventData = `${event.data.productItem.productName} 제거 (${event.data.productItem.quantity}개)`;
+                } else if (event.type === 'ShoppingCartConfirmed') {
+                    eventData = `장바구니 확정`;
+                } else if (event.type === 'ShoppingCartCancelled') {
+                    eventData = `장바구니 취소`;
+                }
+
+                return `
+                            <div class="event-item">
+                                <div class="event-type">${event.type}</div>
+                                <div class="event-data">${eventData}</div>
+                                <div class="event-timestamp">${timestamp}</div>
+                            </div>
+                        `;
+            }).join('')}
+                </div>
+            `;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('cartModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('productModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeProductModal();
+            }
+        });
+
+        // Simulation Variables
+        let simulationCart = null;
+        let simulationStep = 1;
+        let selectedSimProducts = [];
+
+        // Simulation Functions
+        function createSimulationCart() {
+            fetch('/api/carts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    simulationCart = {
+                        id: data.id,
+                        status: data.status,
+                        items: [],
+                        revision: data.revision
+                    };
+                    document.getElementById('cartInfo').style.display = 'block';
+                    document.getElementById('simCartId').textContent = `#${data.id.slice(0, 8)}`;
+                    setTimeout(() => nextSimulationStep(), 1500);
+                })
+                .catch(error => {
+                    showAlert('장바구니 생성 실패', 'error');
+                });
+        }
+
+        function nextSimulationStep() {
+            if (simulationStep < 4) {
+                simulationStep++;
+                updateSimulationUI();
+            }
+        }
+
+        function prevSimulationStep() {
+            if (simulationStep > 1) {
+                simulationStep--;
+                updateSimulationUI();
+            }
+        }
+
+        // Navigate to specific step
+        function goToSimulationStep(stepNumber) {
+            if (stepNumber >= 1 && stepNumber <= 4) {
+                simulationStep = stepNumber;
+                updateSimulationUI();
+            }
+        }
+
+        function updateSimulationUI() {
+            // Update progress bar
+            document.querySelectorAll('.flow-step').forEach((step, index) => {
+                if (index + 1 < simulationStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === simulationStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+
+            // Update flow lines
+            document.querySelectorAll('.flow-line').forEach((line, index) => {
+                if (index + 1 < simulationStep) {
+                    line.classList.add('completed');
+                } else {
+                    line.classList.remove('completed');
+                }
+            });
+
+            // Update content
+            document.querySelectorAll('.simulation-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.querySelector(`.simulation-step[data-step="${simulationStep}"]`).classList.add('active');
+
+            // Load content for each step
+            if (simulationStep === 2) {
+                loadSimulationProducts();
+            } else if (simulationStep === 3) {
+                loadSimulationCartReview();
+            } else if (simulationStep === 4) {
+                loadOrderSummary();
+            }
+        }
+
+        function loadSimulationProducts() {
+            const container = document.getElementById('simProducts');
+            container.innerHTML = products.map((product, index) => `
+                <div class="sim-product-card ${selectedSimProducts.some(p => p.productId === product.productId) ? 'selected' : ''}"
+                     onclick="toggleSimProduct('${product.productId}', '${product.productName}', ${product.price})">
+                    <div class="sim-product-icon-wrapper">
+                        <i data-lucide="${getProductIcon(index, true)}" class="sim-product-icon" style="color: ${getProductColor(index)}"></i>
+                    </div>
+                    <div class="sim-product-name">${product.productName}</div>
+                    <div class="sim-product-price">$${product.price}</div>
+                    <div class="sim-product-quantity" id="simQty-${product.productId}">
+                        ${selectedSimProducts.find(p => p.productId === product.productId) ?
+                    `수량: ${selectedSimProducts.find(p => p.productId === product.productId).quantity}` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // Initialize Lucide icons after dynamic content
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 100);
+        }
+
+        function toggleSimProduct(productId, productName, price) {
+            const existingIndex = selectedSimProducts.findIndex(p => p.productId === productId);
+
+            if (existingIndex > -1) {
+                selectedSimProducts[existingIndex].quantity++;
+            } else {
+                selectedSimProducts.push({ productId, productName, price, quantity: 1 });
+            }
+
+            // Add to actual cart
+            if (simulationCart) {
+                fetch(`/api/carts/${simulationCart.id}/items`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'If-Match': simulationCart.revision
+                    },
+                    body: JSON.stringify({
+                        productId,
+                        productName,
+                        quantity: 1
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        simulationCart.revision = data.revision;
+                        loadSimulationProducts();
+                        showAlert(`${productName} 추가됨`, 'success');
+                    })
+                    .catch(error => {
+                        console.error('Error adding product:', error);
+                        showAlert('상품 추가 실패', 'error');
+                    });
+            }
+        }
+
+        // Add functions for cart review step
+        function addToSimulationCart(productId, productName, price) {
+            if (!simulationCart) return;
+
+            fetch(`/api/carts/${simulationCart.id}/items`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'If-Match': simulationCart.revision
+                },
+                body: JSON.stringify({
+                    productId,
+                    productName,
+                    quantity: 1
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    simulationCart.revision = data.revision;
+                    loadSimulationCartReview();
+                    showAlert(`${productName} 추가됨`, 'success');
+                })
+                .catch(error => {
+                    console.error('Error adding product:', error);
+                    showAlert('상품 추가 실패', 'error');
+                });
+        }
+
+        function removeFromSimulationCart(productId) {
+            if (!simulationCart) return;
+
+            fetch(`/api/carts/${simulationCart.id}/items/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'If-Match': simulationCart.revision
+                },
+                body: JSON.stringify({ quantity: 1 })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    simulationCart.revision = data.revision;
+                    loadSimulationCartReview();
+                    showAlert('상품 제거됨', 'success');
+                })
+                .catch(error => {
+                    console.error('Error removing product:', error);
+                    showAlert('상품 제거 실패', 'error');
+                });
+        }
+
+        function loadSimulationCartReview() {
+            if (!simulationCart) return;
+
+            fetch(`/api/carts/${simulationCart.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update simulationCart with latest data
+                    simulationCart.items = data.items ? data.items.map(item => ({
+                        productId: item.productId,
+                        productName: item.productName,
+                        price: item.unitPrice,
+                        quantity: item.quantity
+                    })) : [];
+                    simulationCart.revision = data.revision;
+
+                    const container = document.getElementById('simCartReview');
+                    if (data.items && data.items.length > 0) {
+                        const total = data.items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+                        container.innerHTML = `
+                        <div class="cart-items">
+                            ${data.items.map(item => `
+                                <div class="cart-item">
+                                    <div class="cart-item-info">
+                                        <div class="cart-item-name">${item.productName}</div>
+                                        <div class="cart-item-price">$${item.unitPrice} × ${item.quantity}</div>
+                                    </div>
+                                    <div class="quantity-control">
+                                        <button class="quantity-btn" onclick="removeFromSimulationCart('${item.productId}')">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span class="quantity-display">${item.quantity}</span>
+                                        <button class="quantity-btn" onclick="addToSimulationCart('${item.productId}', '${item.productName}', ${item.unitPrice})">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="cart-total">
+                            <div class="total-label">총액</div>
+                            <div class="total-amount">$${total.toFixed(2)}</div>
+                        </div>
+                    `;
+                    } else {
+                        container.innerHTML = '<p>장바구니가 비어있습니다. 이전 단계로 돌아가서 상품을 선택하세요.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading cart review:', error);
+                    document.getElementById('simCartReview').innerHTML = '<p>장바구니 데이터를 불러오지 못했습니다.</p>';
+                });
+        }
+
+        function loadOrderSummary() {
+            if (!simulationCart) return;
+
+            fetch(`/api/carts/${simulationCart.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update simulationCart with latest data
+                    simulationCart.items = data.items ? data.items.map(item => ({
+                        productId: item.productId,
+                        productName: item.productName,
+                        price: item.unitPrice,
+                        quantity: item.quantity
+                    })) : [];
+                    simulationCart.revision = data.revision;
+
+                    const container = document.getElementById('orderSummary');
+                    if (data.items && data.items.length > 0) {
+                        const total = data.items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+                        const itemCount = data.items.reduce((sum, item) => sum + item.quantity, 0);
+                        container.innerHTML = `
+                        <div class="summary-header">주문 요약</div>
+                        <div class="summary-items">
+                            ${data.items.map(item => `
+                                <div class="summary-item">
+                                    <div>
+                                        <strong>${item.productName}</strong>
+                                        <span style="color: var(--text-secondary); margin-left: 0.5rem;">
+                                            × ${item.quantity}
+                                        </span>
+                                    </div>
+                                    <div>$${(item.unitPrice * item.quantity).toFixed(2)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="summary-total">
+                            <div>총 ${itemCount}개 상품</div>
+                            <div>$${total.toFixed(2)}</div>
+                        </div>
+                    `;
+                    } else {
+                        container.innerHTML = `
+                        <div class="summary-header">주문 요약</div>
+                        <p style="text-align: center; color: var(--text-secondary); margin: 2rem 0;">
+                            선택된 상품이 없습니다. 이전 단계로 돌아가서 상품을 선택하세요.
+                        </p>
+                    `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading order summary:', error);
+                    document.getElementById('orderSummary').innerHTML = '<p>주문 요약을 불러오지 못했습니다.</p>';
+                });
+        }
+
+        function confirmSimulationOrder() {
+            if (!simulationCart) return;
+
+            fetch(`/api/carts/${simulationCart.id}/confirm`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'If-Match': simulationCart.revision
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    showSimulationResult(true);
+                    loadCartHistory();
+                    loadEventHistory();
+                })
+                .catch(error => {
+                    showAlert('주문 확정 실패', 'error');
+                });
+        }
+
+        function cancelSimulationOrder() {
+            if (!simulationCart) return;
+
+            fetch(`/api/carts/${simulationCart.id}/cancel`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'If-Match': simulationCart.revision
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    showSimulationResult(false);
+                    loadCartHistory();
+                    loadEventHistory();
+                })
+                .catch(error => {
+                    showAlert('주문 취소 실패', 'error');
+                });
+        }
+
+        function showSimulationResult(isConfirmed) {
+            const container = document.getElementById('simResult');
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="result-card ${isConfirmed ? 'success' : 'cancelled'}">
+                    <div class="result-icon">
+                        <i data-lucide="${isConfirmed ? 'check-circle' : 'x-circle'}" style="width: 48px; height: 48px;"></i>
+                    </div>
+                    <div class="result-message">
+                        ${isConfirmed ? '주문이 확정되었습니다!' : '주문이 취소되었습니다'}
+                    </div>
+                    <div class="result-details">
+                        장바구니 ID: ${simulationCart.id.slice(0, 8)}
+                    </div>
+                </div>
+            `;
+
+            // Disable action buttons
+            document.querySelectorAll('.sim-actions button').forEach(btn => {
+                btn.disabled = true;
+            });
+        }
+
+        function resetSimulation() {
+            simulationCart = null;
+            simulationStep = 1;
+            selectedSimProducts = [];
+
+            // Reset UI
+            document.getElementById('cartInfo').style.display = 'none';
+            document.getElementById('simResult').style.display = 'none';
+            document.querySelectorAll('.sim-actions button').forEach(btn => {
+                btn.disabled = false;
+            });
+
+            updateSimulationUI();
+            showAlert('시뮬레이션이 초기화되었습니다', 'success');
+        }
+
+        // Delete cart function
+        async function deleteCart(cartId, event) {
+            event.stopPropagation(); // Prevent opening modal
+
+            if (!confirm('정말 이 장바구니를 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/carts/${cartId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete cart');
+                }
+
+                showAlert('장바구니가 삭제되었습니다', 'success');
+
+                // Remove from cartHistory array
+                cartHistory = cartHistory.filter(cart => cart.id !== cartId);
+
+                // Re-render the history
+                renderCartHistory();
+                updateStats();
+
+                // If current cart was deleted, reset it
+                if (currentCart && currentCart.id === cartId) {
+                    currentCart = null;
+                    renderCart();
+                }
+
+                // If simulation cart was deleted, reset simulation
+                if (simulationCart && simulationCart.id === cartId) {
+                    resetSimulation();
+                }
+
+            } catch (error) {
+                showAlert('장바구니 삭제에 실패했습니다', 'error');
+                console.error('Error deleting cart:', error);
+            }
+        }
+
+        // Delete all carts function
+        async function deleteAllCarts() {
+            if (cartHistory.length === 0) {
+                showAlert('삭제할 장바구니가 없습니다', 'warning');
+                return;
+            }
+
+            if (!confirm(`정말 모든 장바구니(${cartHistory.length}개)를 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/carts', {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete all carts');
+                }
+
+                const result = await response.json();
+
+                // Clear all carts from local storage
+                cartHistory = [];
+                currentCart = null;
+                simulationCart = null;
+                selectedSimProducts = [];
+
+                // Re-render UI
+                renderCartHistory();
+                renderCart();
+                updateStats();
+                resetSimulation();
+
+                showAlert(`${result.deletedCount}개 장바구니가 삭제되었습니다`, 'success');
+
+            } catch (error) {
+                showAlert('전체 삭제에 실패했습니다', 'error');
+                console.error('Error deleting all carts:', error);
+            }
+        }
+
+        // Product modal functions
+        let selectedProduct = null;
+
+        function openProductModal(productId) {
+            const product = products.find(p => p.productId === productId);
+            if (!product) {
+                showAlert('상품을 찾을 수 없습니다', 'error');
+                return;
+            }
+
+            selectedProduct = product;
+            const modal = document.getElementById('productModal');
+
+            // Update modal title
+            document.getElementById('modalProductTitle').textContent = product.productName;
+
+            // Render product icon
+            const iconContainer = document.getElementById('modalProductIcon');
+            const productIndex = products.findIndex(p => p.productId === productId);
+            const iconColor = getProductColor(productIndex);
+            iconContainer.innerHTML = `
+                <i data-lucide="${product.icon || getProductIcon(productIndex, true)}" style="color: ${iconColor};"></i>
+            `;
+
+            // Render product info
+            const infoContainer = document.getElementById('modalProductInfo');
+            const categoryNames = {
+                electronics: '전자제품',
+                computer: '컴퓨터',
+                accessories: '액세서리',
+                mobile: '모바일',
+                gaming: '게임',
+                other: '기타'
+            };
+
+            infoContainer.innerHTML = `
+                <div class="product-detail-title">${product.productName}</div>
+                <div class="product-detail-price">$${product.price}</div>
+                ${product.category ? `
+                    <div class="product-detail-category">${categoryNames[product.category] || product.category}</div>
+                ` : ''}
+                ${product.description ? `
+                    <div class="product-detail-description">${product.description}</div>
+                ` : `
+                    <div class="product-detail-description">이 상품에 대한 상세 설명이 없습니다.</div>
+                `}
+                <div class="product-detail-id">상품 ID: ${product.productId}</div>
+            `;
+
+            // Show modal
+            modal.classList.add('active');
+
+            // Initialize icons
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 100);
+        }
+
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('active');
+            selectedProduct = null;
+        }
+
+        function addToCartFromModal() {
+            if (!selectedProduct) {
+                showAlert('선택된 상품이 없습니다', 'error');
+                return;
+            }
+
+            // Close modal first
+            closeProductModal();
+
+            // Add to cart
+            addToCart(selectedProduct.productId, selectedProduct.productName, selectedProduct.price);
+        }
+
+        // Product management functions
+        function showAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'block';
+            document.getElementById('productsSection').style.display = 'none';
+
+            // Initialize icons for the form
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 100);
+        }
+
+        function hideAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'none';
+            document.getElementById('productsSection').style.display = 'block';
+            document.getElementById('addProductForm').querySelector('form').reset();
+        }
+
+        function addNewProduct(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const newProduct = {
+                productId: `product-${Date.now()}`, // Simple ID generation
+                productName: formData.get('productName'),
+                price: parseFloat(formData.get('productPrice')),
+                category: formData.get('productCategory'),
+                icon: formData.get('productIcon'),
+                description: formData.get('productDescription')
+            };
+
+            // Add to products array
+            products.push(newProduct);
+
+            // Re-render products
+            renderProducts();
+
+            // Hide form
+            hideAddProductForm();
+
+            showAlert(`${newProduct.productName}이(가) 등록되었습니다`, 'success');
+        }
+
+        function deleteProduct(productId, event) {
+            event.stopPropagation();
+
+            const product = products.find(p => p.productId === productId);
+            if (!product) return;
+
+            if (!confirm(`정말 '${product.productName}'을(를) 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            // Remove from products array
+            products = products.filter(p => p.productId !== productId);
+
+            // Re-render products
+            renderProducts();
+
+            showAlert(`${product.productName}이(가) 삭제되었습니다`, 'success');
+        }
+
         // Initialize
         async function init() {
             await loadProducts();
             loadCartHistory();
             loadEventHistory();
+
+            // Initialize Lucide icons after dynamic content
+            setTimeout(() => {
+                lucide.createIcons();
+            }, 100);
         }
 
         init();
